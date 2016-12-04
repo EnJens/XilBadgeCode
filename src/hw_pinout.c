@@ -6,8 +6,8 @@ const pinout_t pins[] = {
 	[LED2] = { gpioPortF, 2 },
 	[LED3] = { gpioPortD, 7},
 	[LED4] = { gpioPortB, 11 },
-	[USR1] = { gpioPortA, 0 },
-	[USR2] = { gpioPortD, 6 },
+	[USR1] = { gpioPortD, 6 },
+	[USR2] = { gpioPortA, 0 },
 	[CAP_S_1] = { gpioPortC, 15 },
 	[CAP_S_2] = { gpioPortC, 14 },
 };
