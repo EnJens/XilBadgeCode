@@ -67,3 +67,7 @@ $(PROJECTNAME).elf: $(OBJECTS)
 clean:
 	@echo "Cleaning output files"
 	@rm -rf build *.elf *.bin *.map
+
+debug:
+	openocd -f interface/stlink-v2.cfg -f target/efm32.cfg
+
