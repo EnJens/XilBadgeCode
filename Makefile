@@ -71,3 +71,6 @@ clean:
 debug:
 	openocd -f interface/stlink-v2.cfg -f target/efm32.cfg
 
+flash: $(PROJECTNAME).elf
+	openocd -f interface/stlink-v2.cfg -f target/efm32.cfg \
+	-c 'init; reset halt; flash write_image $(PROJECTNAME).elf'
