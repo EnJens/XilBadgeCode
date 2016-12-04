@@ -56,10 +56,23 @@ int main(int argc,char **argv)
 	while(1)
 	{
 		pinout_t led = pins[leds[currled]];
-		currled = (currled + 1) % 4;
-		GPIO_PinOutToggle(led.port, led.pin);
-		Delay(500);
-		GPIO_PinOutToggle(led.port, led.pin);
+
+
+
+		if (!GPIO_PinInGet(pins[USR1].port, pins[USR1].pin))
+		{
+			GPIO_PinOutToggle(led.port, led.pin);
+			Delay(500);
+			GPIO_PinOutToggle(led.port, led.pin);
+			Delay(500);
+
+		}else{
+			currled = (currled + 1) % 4;
+
+			GPIO_PinOutToggle(led.port, led.pin);
+			Delay(500);
+			GPIO_PinOutToggle(led.port, led.pin);
+		}
 	}
 
 	return 0;
