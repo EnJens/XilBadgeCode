@@ -38,10 +38,10 @@ int gpio_init(void)
 }
 
 int leds[] = {
-	LED1,
 	LED2,
+	LED4,
+	LED1,
 	LED3,
-	LED4
 };
 
 int main(int argc,char **argv)
@@ -56,9 +56,10 @@ int main(int argc,char **argv)
 	while(1)
 	{
 		pinout_t led = pins[leds[currled]];
-		GPIO_PinOutToggle(led.port, led.pin);
 		currled = (currled + 1) % 4;
-		Delay(100);
+		GPIO_PinOutToggle(led.port, led.pin);
+		Delay(500);
+		GPIO_PinOutToggle(led.port, led.pin);
 	}
 
 	return 0;
