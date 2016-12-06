@@ -67,7 +67,14 @@ int main()
 	{
 		pinout_t led = pins[leds[currled]];
 
-
+		while (!GPIO_PinInGet(pins[USR2].port, pins[USR2].pin))
+		{
+			GPIO_PinOutToggle(pins[LED1].port, pins[LED1].pin);
+			GPIO_PinOutToggle(pins[LED2].port, pins[LED2].pin);
+			GPIO_PinOutToggle(pins[LED3].port, pins[LED3].pin);
+			GPIO_PinOutToggle(pins[LED4].port, pins[LED4].pin);
+			Delay(500);
+		}
 
 		if (!GPIO_PinInGet(pins[USR1].port, pins[USR1].pin))
 		{
