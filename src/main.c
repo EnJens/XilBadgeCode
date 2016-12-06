@@ -23,6 +23,14 @@ void Delay(uint32_t dlyTicks)
   while ((msTicks - curTicks) < dlyTicks) ;
 }
 
+void Blink(uint32_t port,uint32_t pin, uint32_t dlyTicks)
+{
+	GPIO_PinOutToggle(port, pin);
+	Delay(dlyTicks);
+	GPIO_PinOutToggle(port, pin);
+	Delay(dlyTicks);
+}
+
 int gpio_init(void)
 {
 	CMU_ClockEnable(cmuClock_HFPER, true);
@@ -35,6 +43,8 @@ int gpio_init(void)
 	GPIO_PinModeSet(pins[USR1].port, pins[USR1].pin, gpioModeInputPull, 1);
 	GPIO_PinModeSet(pins[USR2].port, pins[USR2].pin, gpioModeInputPull, 1);
 
+	return 0;
+
 }
 
 int leds[] = {
@@ -44,7 +54,7 @@ int leds[] = {
 	LED3,
 };
 
-int main(int argc,char **argv)
+int main()
 {
 	int currled=0;
 	CHIP_Init();
@@ -61,17 +71,12 @@ int main(int argc,char **argv)
 
 		if (!GPIO_PinInGet(pins[USR1].port, pins[USR1].pin))
 		{
-			GPIO_PinOutToggle(led.port, led.pin);
-			Delay(500);
-			GPIO_PinOutToggle(led.port, led.pin);
-			Delay(500);
+			Blink(led.port, led.pin, 500);
 
 		}else{
 			currled = (currled + 1) % 4;
 
-			GPIO_PinOutToggle(led.port, led.pin);
-			Delay(500);
-			GPIO_PinOutToggle(led.port, led.pin);
+			Blink(led.port, led.pin, 500);
 		}
 	}
 
