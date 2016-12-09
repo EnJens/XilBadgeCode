@@ -1,18 +1,12 @@
 
 .SUFFIXES:
-.PHONY: all clean flash flash-bootloader debug
+.PHONY: all
 
 CROSS_COMPILE ?= arm-none-eabi-
 CC := $(CROSS_COMPILE)gcc
 LD := $(CROSS_COMPILE)ld
 OBJCOPY := $(CROSS_COMPILE)objcopy
 
-ifeq ($(STANDALONE),1)
-LINKER_SCRIPT_NAME := efm32tg.ld
-else
-LINKER_SCRIPT_NAME := efm32tg-bl.ld
-CFLAGS += -DUSE_BOOTLOADER
-endif
 
 PROJECTNAME=template
 SOURCES := main.c hw_pinout.c
@@ -20,7 +14,7 @@ SOURCES := main.c hw_pinout.c
 GECKO_SDK_PATH := lib/GeckoSDK
 EFM_DEVICE_PATH := $(GECKO_SDK_PATH)/Device/SiliconLabs/EFM32TG
 DEVICE_SOURCES := system_efm32tg.c GCC/startup_efm32tg.c
-LINKER_SCRIPT := $(EFM_DEVICE_PATH)/Source/GCC/$(LINKER_SCRIPT_NAME)
+LINKER_SCRIPT := $(EFM_DEVICE_PATH)/Source/GCC/efm32tg.ld
 EMLIB_PATH := $(GECKO_SDK_PATH)/emlib
 EMLIB_SRC_PATH := $(EMLIB_PATH)/src
 CMSIS_PATH := $(GECKO_SDK_PATH)/CMSIS
@@ -42,13 +36,13 @@ VPATH = .:src:$(EMLIB_SRC_PATH):$(EMLIB_DEVICE_PATH):$(EFM_DEVICE_PATH)/Source
 INCLUDE_DIRS := inc $(EFM_DEVICE_PATH)/Include $(EMLIB_PATH)/inc \
 	$(CMSIS_PATH)/Include
 
-CFLAGS += -Wall -Wextra -mcpu=cortex-m3 -mthumb \
+CFLAGS := -Wall -Wextra -mcpu=cortex-m3 -mthumb \
 	-mfix-cortex-m3-ldrd -ffunction-sections \
 	-fdata-sections -fomit-frame-pointer -std=c99 \
 	-DEFM32TG110F32 \
 	$(addprefix -I, $(INCLUDE_DIRS))
 
-LDFLAGS += -Xlinker -Map=$(PROJECTNAME).map -mcpu=cortex-m3 -mthumb \
+LDFLAGS := -Xlinker -Map=$(PROJECTNAME).map -mcpu=cortex-m3 -mthumb \
 	-T$(LINKER_SCRIPT)
 LIBS := -Wl,--gc-sections \
 	-Wl,--start-group -lgcc -lc -lnosys -Wl,--end-group
@@ -80,7 +74,3 @@ debug:
 flash: $(PROJECTNAME).elf
 	openocd -f interface/stlink-v2.cfg -f target/efm32.cfg \
 	-c 'init; program $(PROJECTNAME).elf verify reset exit ;'
-
-flash-bootloader: bootloader-tinygecko.hex
-	openocd -f interface/stlink-v2.cfg -f target/efm32.cfg \
-	-c 'init; program $< verify reset exit' ;

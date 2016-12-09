@@ -59,11 +59,6 @@ int main()
 	int currled=0;
 	CHIP_Init();
 
-    // Needed to support debugging when using UART bootloader
-    #ifdef USE_BOOTLOADER
-        SCB->VTOR=0x800;
-    #endif
-
 	// Set systick to 1ms interval
 	if (SysTick_Config(CMU_ClockFreqGet(cmuClock_CORE) / 1000)) while (1);
 	gpio_init();
